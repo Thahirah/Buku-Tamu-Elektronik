@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>BUKU TAMU ELEKTRONIK</title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="description" content="" />
+		<meta name="keywords" content="" />
+			<link rel="stylesheet" href="css/validationEngine.jquery.css" />
+			<link rel="stylesheet" href="css/signaturepad.css" />
+		
+		<script src="js/jquery.min.js"></script>
+		<script src="js/skel.min.js"></script>
+		<script src="js/skel-layers.min.js"></script>
+		<script src="js/init.js"></script>
+		<script src="js/jquery.formtowizard.js"></script>
+		<script src="js/jquery.validationEngine.js"></script>
+		<script src="js/jquery.validationEngine-en.js"></script>
+		<!--Tanda tangan-->
+		<script src="js/json2.min.js"></script>
+		<script src="js/signaturepad.js"></script>
+		<!--Kamera-->
+		<script src="js/swfobject.js"></script>
+		<script src="js/scriptcam.js"></script> 
+		<script>
+				$( function() {
+					var $GuestBook = $( '#GuestBook' );
+					
+					$GuestBook.validationEngine();
+					
+					$GuestBook.formToWizard({
+						submitButton: 'SubmitForm',
+						showProgress: true, //default value for showProgress is also true
+						nextBtnName: 'Forward >>',
+						prevBtnName: '<< Previous',
+						showStepNo: false,
+						validateBeforeNext: function() {
+							return $GuestBook.validationEngine( 'validate' );
+						}
+					});
+					
+					$( '#btn_next' ).click( function() {
+						$GuestBook.formToWizard( 'NextStep' );
+					});
+					
+					$( '#btn_prev' ).click( function() {
+						$GuestBook.formToWizard( 'PreviousStep' );
+					});
+				});
+
+		</script>
+		<script>
+		$(document).ready(function(){
+				$(window).load(function() {
+					// Animate loader off screen
+					$(".se-pre-con").fadeOut("slow");;
+					$("body").show();
+				});
+			$("#steps").hide();
+			$("#SubmitForm").hide();
+			$("#step1Next").on("click", function(){
+				$("#SubmitForm").show();
+			});
+
+		});
+		</script>
+<!--
+<script type="text/javascript">
+$(document).ready(function () {
+
+    var screen = $(window)    
+
+    if (screen.width < 981) {
+        $("#image1").prop('disabled', true);
+		$("#image2").prop('disabled', false);
+    } else {
+		$("#image1").prop('disabled',false);
+        $("#image2").prop('disabled',true);
+    }
+
+});
+</script>
+-->
+
+		<script>
+	$(document).ready(function() {
+	  $('.sigPad').signaturePad({drawOnly:true});
+	});
+	</script>
+	<script> 
+		$(document).ready(function() {
+			$("#webcam").scriptcam({
+				showMicrophoneErrors:false,
+				onError:onError,
+				onWebcamReady:onWebcamReady,
+				onPictureAsBase64:base64_tofield_and_image
+			});
+		});
+		function base64_toimage() {
+			$('#imageview').attr("src","data:image/png;base64,"+$.scriptcam.getFrameAsBase64());
+			$('#image1').attr("value","data:image/png;base64,"+$.scriptcam.getFrameAsBase64());
+		};
+		function base64_tofield_and_image(b64) {
+		};
+		function changeCamera() {
+		}
+		function onError(errorId,errorMsg) {
+		}			
+		function onWebcamReady(cameraNames,camera,microphoneNames,microphone,volume) {
+		}
+		
+	</script>
+		<!--[if lte IE 8]><link rel="stylesheet" href="css/ie/v8.css" /><![endif]-->
+	</head>
+	<body style="display:none;">
+		<!-- Loader -->
+			<div class="se-pre-con"></div>
+
+		<!-- Main -->
+			<section id="main" class="wrapper">
+					<form id="GuestBook" class="sigPad" action="php/input.php" method="POST">
+					
+					<div class="container">
+						<fieldset>
+							<header class="major">
+								<h2>Identitas Diri</h2>
+							</header>
+										<label for="nama">NAMA LENGKAP:</label>
+										<input type="text" name="nama" id="nama" placeholder="Nama Lengkap Anda*" class="validate[required]" data-prompt-position="bottomRight:-100" data-errormessage="*Wajib diisi!" />
+										<label for="email">E-MAIL:</label>
+										<input type="text" name="email" id="email" placeholder="(OPSIONAL)" />
+										<label for="nomor">NOMOR TELEPON:</label>
+										<input type="tel" name="telepon" id="telepon" placeholder="(OPSIONAL)" />
+										<label for="tujuan">TUJUAN KEDATANGAN:</label>
+										<textarea name="tujuan" id="tujuan" placeholder="Tujuan Kedatangan Anda*" class="validate[required]" data-prompt-position="bottomRight:-100" data-errormessage="*Wajib diisi!" onkeyup="textAreaAdjust(this)"></textarea>
+<script>
+function textAreaAdjust(t) {
+    t.style.height = "0px";
+    t.style.height = (29+t.scrollHeight)+"px";
+}
+</script>	
+						</fieldset>
+					</div>
+						
+					<div class="container">
+						<fieldset>
+							<header class="major">
+								<h2>Ambil Foto</h2>
+							</header>
+								<!--Webcam--> 
+							  <div class="centeralign" id="laptop">
+									<div id="capture" style="display:inline;">
+										<div id="webcam" style="width:300px"></div>
+									</div>
+									<div id="display" style="display:inline;">
+										<img id="imageview" style="height:240px;padding:0;" value="0"/>
+									</div>
+									<br />
+									<input type="button" onclick="base64_toimage()" value="Capture image">
+									<input type="hidden" name="outputfoto" class="foto" value="" id="image1">
+							  </div>
+							  <div class="centeralign" id="mobile">
+								<input type="file" accept="image/*" name="foto" onchange="loadFile(event)">
+								<img id="hasilfoto" style="height:240px;padding:0;"/>
+								<input type="hidden" name="outputfoto2" class="foto" value="" id="image2">
+								<script>
+									  var loadFile = function(event) {
+										var reader = new FileReader();
+										reader.onload = function(){
+										  var outputfoto = document.getElementById('hasilfoto');
+										  outputfoto.src = reader.result;
+										  var inputfoto = document.getElementById('image2');
+										  inputfoto.value = outputfoto.src
+										};
+										reader.readAsDataURL(event.target.files[0]);
+									  };
+								</script>
+							  </div>
+						</fieldset>
+					</div>
+						
+					<div class="container">
+						<fieldset>
+							<header class="major">
+								<h2>Tanda Tangan</h2>
+							</header>
+						  <div class="centeralign">
+							<a class="clearButton" href="#clear">Clear</a>
+							<br />
+							  <canvas class="pad" width="350" height="110"></canvas>
+							  <input type="hidden" name="output" class="output">
+						  </div>
+						</fieldset>
+					</div>
+						
+            <input id="SubmitForm" class="button" type="submit" value="Submit form" name="submit" />
+					</form>
+			</section>
+
+	</body>
+</html>
